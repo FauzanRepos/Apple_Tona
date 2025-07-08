@@ -17,6 +17,8 @@ class PhotoEditorViewModel: ObservableObject {
     @Published var isProcessing = false
     @Published var errorMessage: String?
     @Published var showManualEdit = false
+    @Published var showPhotoPicker: Bool = false
+    @Published var selectedItems: [PhotosPickerItem] = []
     
     // Manual edit properties
     @Published var brightness: Double = 0.0
@@ -40,6 +42,23 @@ class PhotoEditorViewModel: ObservableObject {
                 }
                 self.isProcessing = false
             }
+        }
+    }
+    
+    func loadSelectedImages(completion: @escaping ([UIImage]) -> Void) {
+        let group = DispatchGroup()
+        var images: [UIImage] = []
+        for item in selectedItems {
+            group.enter()
+            item.loadTransferable(type: Data.self) { result in
+                defer { group.leave() }
+                if case .success(let data) = result, let data, let img = UIImage(data: data) {
+                    images.append(img)
+                }
+            }
+        }
+        group.notify(queue: .main) {
+            completion(images)
         }
     }
     

@@ -11,7 +11,7 @@ import SwiftUI
 struct AppDelegate: App {
     var body: some Scene {
         WindowGroup {
-            ToneCollectionView()
+            RootView()
         }
     }
 }

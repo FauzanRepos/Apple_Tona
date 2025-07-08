@@ -18,10 +18,10 @@ extension Color {
     static let appWarning = Color.yellow
     static let appError = Color.red
     
-    static let tonaDeepBlue = Color(hex: "#223447")
-    static let tonaAccentBlue = Color(hex: "#2A5BDE")
-    static let tonaOffWhite = Color(hex: "#F8F8F6")
-    static let tonaSoftGray = Color(hex: "#F2F3F5")
+    // MARK: - App Theme Colors 
+    static let tonaDeepBlue = Color("DeepBlue")
+    static let tonaAccentBlue = Color("AccentColor")
+    static let tonaOffWhite = Color("OffWhite")
     static let tonaCardShadow = Color.black.opacity(0.07)
     
     // MARK: - Tone Style Colors

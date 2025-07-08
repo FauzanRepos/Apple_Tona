@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-class ToneStyle {
+class ToneStyle: Hashable {
     var id: UUID
     var name: String
     var previewImageData: Data?
@@ -21,6 +21,15 @@ class ToneStyle {
         self.createdAt = Date()
         self.referenceImagesData = referenceImagesData
     }
+    
+    // MARK: - Hashable
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
+    }
+    
+    static func == (lhs: ToneStyle, rhs: ToneStyle) -> Bool {
+        lhs.id == rhs.id
+    }
 }
 
 @MainActor
@@ -30,20 +39,39 @@ class ToneCollectionViewModel: ObservableObject {
     @Published var errorMessage: String?
     
     init() {
-        loadToneStyles()
+        loadMockToneStyles()
     }
     
-    func loadToneStyles() {
+    func loadMockToneStyles() {
         isLoading = true
-        // TODO: Load from SwiftData
-        // For now, create some sample data
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.toneStyles = [
-                ToneStyle(name: "Vintage Warm", referenceImagesData: []),
-                ToneStyle(name: "Cool Blue", referenceImagesData: []),
-                ToneStyle(name: "High Contrast", referenceImagesData: [])
-            ]
-            self.isLoading = false
+        // Example mock data with real image URLs
+        let mockTones: [(String, String)] = [
+            ("Sunrises", "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80"),
+            ("Pinkies", "https://images.unsplash.com/photo-1519125323398-675f0ddb6308?auto=format&fit=crop&w=600&q=80"),
+            ("Vinyl Mood", "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=600&q=80")
+        ]
+        
+        Task {
+            var tones: [ToneStyle] = []
+            for (name, urlString) in mockTones {
+                let imageData = await Self.fetchImageData(from: urlString)
+                let tone = ToneStyle(name: name, previewImageData: imageData)
+                tones.append(tone)
+            }
+            await MainActor.run {
+                self.toneStyles = tones
+                self.isLoading = false
+            }
+        }
+    }
+    
+    static func fetchImageData(from urlString: String) async -> Data? {
+        guard let url = URL(string: urlString) else { return nil }
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            return data
+        } catch {
+            return nil
         }
     }
     

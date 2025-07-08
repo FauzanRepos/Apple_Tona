@@ -29,19 +29,13 @@ actor FastAPIToneService {
     /// Simulate uploading reference images and getting a tone ID
     func uploadReferenceImages(_ images: [UIImage]) async throws -> String {
         try await Task.sleep(nanoseconds: 1_000_000_000) // 1s delay
-        if Bool.random() { // Simulate occasional network error
-            throw FastAPIError.networkError
-        }
         // Return a mock tone ID
-        return UUID().uuidString
+        return "mock-tone-id"
     }
     
     /// Simulate applying a tone to a photo and returning a processed image
     func applyTone(to image: UIImage, toneID: String) async throws -> UIImage {
         try await Task.sleep(nanoseconds: 1_200_000_000) // 1.2s delay
-        if Bool.random() { // Simulate occasional error
-            throw FastAPIError.processingFailed
-        }
         // Return a mock processed image (tint the image for demo)
         return tintImage(image, color: .systemBlue.withAlphaComponent(0.25))
     }

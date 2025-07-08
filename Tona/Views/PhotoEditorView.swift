@@ -10,196 +10,171 @@ import PhotosUI
 
 struct PhotoEditorView: View {
     let toneStyle: ToneStyle
+    var onAdjust: ((UIImage) -> Void)? = nil
     @StateObject private var viewModel = PhotoEditorViewModel()
+    @State private var showLoading = false
+    @State private var selectedImage: UIImage? = nil
+    @State private var processedImage: UIImage? = nil
+    @State private var showShareSheet = false
     
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                // Image Display
-                if let img = viewModel.processedImage ?? viewModel.originalImage {
-                    Image(uiImage: img)
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(maxHeight: 300)
-                        .cornerRadius(12)
-                        .shadow(radius: 5)
-                } else {
-                    VStack(spacing: 16) {
-                        Image(systemName: "photo")
-                            .font(.system(size: 60))
-                            .foregroundColor(.gray)
-                        Text("No image selected")
-                            .font(.headline)
-                            .foregroundColor(.gray)
-                        Text("Pick a photo to start editing")
-                            .font(.caption)
-                            .foregroundColor(.secondary)
+        VStack(spacing: 0) {
+            // Navigation bar title and back handled by parent
+            Spacer().frame(height: 16)
+            
+            // Main content
+            if selectedImage == nil {
+                // Empty state: Large square upload area
+                Button(action: { viewModel.showPhotoPicker = true }) {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 16)
+                            .fill(Color(UIColor.systemGray5))
+                            .frame(width: 280, height: 280)
+                            .shadow(radius: 2)
+                        VStack(spacing: 16) {
+                            Image(systemName: "photo.on.rectangle.angled")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width: 56, height: 56)
+                                .foregroundColor(Color.tonaAccentBlue)
+                            Image(systemName: "plus.circle.fill")
+                                .font(.system(size: 32))
+                                .foregroundColor(Color.tonaAccentBlue)
+                        }
                     }
-                    .frame(height: 200)
-                    .frame(maxWidth: .infinity)
-                    .background(Color.gray.opacity(0.1))
-                    .cornerRadius(12)
+                }
+                .buttonStyle(PlainButtonStyle())
+                .photosPicker(isPresented: $viewModel.showPhotoPicker, selection: $viewModel.selectedItems, matching: .images)
+                .onChange(of: viewModel.selectedItems) { _, _ in
+                    viewModel.loadSelectedImages { images in
+                        if let img = images.first {
+                            selectedImage = img
+                            processedImage = nil
+                        }
+                    }
+                }
+                Spacer().frame(height: 32)
+            } else {
+                // Editing state: Two side-by-side images
+                HStack(alignment: .top, spacing: 12) {
+                    if let original = selectedImage {
+                        Image(uiImage: original)
+                            .resizable()
+                            .aspectRatio(1, contentMode: .fill)
+                            .frame(width: 160, height: 200)
+                            .clipped()
+                            .cornerRadius(12)
+                    }
+                    ZStack(alignment: .topTrailing) {
+                        if let edited = processedImage ?? selectedImage {
+                            Image(uiImage: edited)
+                                .resizable()
+                                .aspectRatio(1, contentMode: .fill)
+                                .frame(width: 160, height: 200)
+                                .clipped()
+                                .cornerRadius(12)
+                        }
+                        // X button to remove/reset
+                        Button(action: {
+                            selectedImage = nil
+                            processedImage = nil
+                        }) {
+                            Image(systemName: "xmark.circle.fill")
+                                .font(.system(size: 24))
+                                .foregroundColor(.blue)
+                                .background(Color.white)
+                                .clipShape(Circle())
+                                .padding(6)
+                        }
+                    }
+                }
+                .frame(maxWidth: .infinity)
+                .padding(.top, 8)
+                .padding(.bottom, 4)
+                
+                // Tap to adjust
+                Button(action: { 
+                    if let img = processedImage ?? selectedImage {
+                        onAdjust?(img)
+                    }
+                }) {
+                    Text("tap to adjust")
+                        .font(.subheadline)
+                        .foregroundColor(Color.tonaDeepBlue.opacity(0.7))
+                        .padding(.top, 8)
+                        .padding(.bottom, 16)
                 }
                 
-                // Photo Picker
-                PhotosPicker(
-                    selection: $viewModel.selectedItem,
-                    matching: .images,
-                    photoLibrary: .shared()
-                ) {
-                    HStack {
-                        Image(systemName: "photo.on.rectangle")
-                        Text("Pick Photo to Edit")
+                // Save/Share buttons
+                HStack(spacing: 16) {
+                    Button("Save to Photos") {
+                        if let img = processedImage ?? selectedImage {
+                            PhotoProcessingService.shared.saveImageToPhotos(img)
+                        }
                     }
-                    .padding()
-                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, 18)
                     .background(Color.green.opacity(0.8))
                     .foregroundColor(.white)
                     .cornerRadius(10)
-                }
-                .onChange(of: viewModel.selectedItem) { _, _ in
-                    viewModel.loadSelectedImage()
-                }
-                
-                // Tone Style Selection
-                if viewModel.originalImage != nil {
-                    VStack(alignment: .leading, spacing: 12) {
-                        Text("Apply Tone Style")
-                            .font(.headline)
-                        
-                        ScrollView(.horizontal, showsIndicators: false) {
-                            HStack(spacing: 12) {
-                                ToneStyleButton(
-                                    name: "Vintage Warm",
-                                    color: .orange
-                                ) {
-                                    // Apply vintage filter
-                                    if let original = viewModel.originalImage {
-                                        viewModel.processedImage = original.applyingSepia(intensity: 0.8)?
-                                            .applyingVignette(intensity: 0.5, radius: 1.0)
-                                    }
-                                }
-                                
-                                ToneStyleButton(
-                                    name: "Cool Blue",
-                                    color: .blue
-                                ) {
-                                    // Apply cool filter
-                                    if let original = viewModel.originalImage {
-                                        viewModel.processedImage = original.applyingTemperature(4000, tint: -0.1)?
-                                            .applyingSaturation(0.8)
-                                    }
-                                }
-                                
-                                ToneStyleButton(
-                                    name: "High Contrast",
-                                    color: .purple
-                                ) {
-                                    // Apply high contrast filter
-                                    if let original = viewModel.originalImage {
-                                        viewModel.processedImage = original.applyingContrast(1.5)?
-                                            .applyingSaturation(1.2)
-                                    }
-                                }
-                            }
-                            .padding(.horizontal)
+                    
+                    Button("Share") {
+                        showShareSheet = true
+                    }
+                    .padding(.vertical, 10)
+                    .padding(.horizontal, 18)
+                    .background(Color.purple.opacity(0.8))
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+                    .sheet(isPresented: $showShareSheet) {
+                        if let img = processedImage ?? selectedImage {
+                            ShareSheet(activityItems: [img])
                         }
                     }
                 }
-                
-                // Action Buttons
-                if viewModel.processedImage != nil || viewModel.originalImage != nil {
-                    VStack(spacing: 12) {
-                        if viewModel.isProcessing {
-                            ProgressView("Processing...")
-                                .padding()
-                        } else {
-                            Button("Manual Edit") {
-                                viewModel.showManualEdit = true
-                            }
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(Color.blue.opacity(0.8))
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                            
-                            HStack(spacing: 12) {
-                                Button("Save to Photos") {
-                                    viewModel.saveProcessedImage()
-                                }
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                                .background(Color.green.opacity(0.8))
-                                .foregroundColor(.white)
-                                .cornerRadius(10)
-                                
-                                Button("Share") {
-                                    viewModel.shareProcessedImage()
-                                }
-                                .padding()
-                                .frame(maxWidth: .infinity)
-                                .background(Color.orange.opacity(0.8))
-                                .foregroundColor(.white)
-                                .cornerRadius(10)
-                            }
-                            
-                            Button("Reset") {
-                                viewModel.resetToOriginal()
-                            }
-                            .padding()
-                            .frame(maxWidth: .infinity)
-                            .background(Color.red.opacity(0.8))
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                        }
-                    }
-                }
+                .padding(.bottom, 8)
             }
-            .padding()
+            Spacer()
+            // Tone cards at the bottom
+            ToneCardGallery(selectedTone: toneStyle)
+                .padding(.bottom, 12)
         }
-        .navigationTitle("Edit Photo")
-        .background(
-            NavigationLink(
-                destination: ManualEditView(inputImage: viewModel.processedImage ?? viewModel.originalImage ?? UIImage()),
-                isActive: $viewModel.showManualEdit
-            ) {
-                EmptyView()
-            }
-        )
-        .alert("Error", isPresented: .constant(viewModel.errorMessage != nil)) {
-            Button("OK") {
-                viewModel.errorMessage = nil
-            }
-        } message: {
-            if let errorMessage = viewModel.errorMessage {
-                Text(errorMessage)
-            }
-        }
+        .padding(.horizontal, 0)
+        .background(Color.tonaOffWhite.ignoresSafeArea())
+        .navigationTitle("Upload Photo")
+        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
-struct ToneStyleButton: View {
-    let name: String
-    let color: Color
-    let action: () -> Void
-    
+// Helper for tone cards at the bottom
+struct ToneCardGallery: View {
+    let selectedTone: ToneStyle
+    // This should be replaced with your actual tone list
+    let tones: [ToneStyle] = [
+        // ToneStyle(name: "Sunrises", previewImageData: nil),
+        // ToneStyle(name: "Pinkies", previewImageData: nil),
+        // ToneStyle(name: "Moody", previewImageData: nil)
+    ]
     var body: some View {
-        Button(action: action) {
-            VStack(spacing: 4) {
-                Circle()
-                    .fill(color.opacity(0.8))
-                    .frame(width: 50, height: 50)
-                    .overlay(
-                        Image(systemName: "wand.and.stars")
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 16) {
+                ForEach(tones, id: \.id) { tone in
+                    ZStack(alignment: .bottomLeading) {
+                        Rectangle()
+                            .fill(Color.gray.opacity(0.2))
+                            .frame(width: 110, height: 150)
+                            .cornerRadius(16)
+                        Text(tone.name)
+                            .font(.headline)
                             .foregroundColor(.white)
-                    )
-                
-                Text(name)
-                    .font(.caption)
-                    .fontWeight(.medium)
-                    .foregroundColor(.primary)
+                            .padding(8)
+                            .background(tone.id == selectedTone.id ? Color.tonaAccentBlue.opacity(0.7) : Color.black.opacity(0.4))
+                            .cornerRadius(8)
+                            .padding([.leading, .bottom], 8)
+                    }
+                }
             }
+            .padding(.horizontal, 12)
         }
-        .buttonStyle(PlainButtonStyle())
     }
 }
