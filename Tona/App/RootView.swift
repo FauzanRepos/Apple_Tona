@@ -2,6 +2,8 @@ import SwiftUI
 
 struct RootView: View {
     @State private var path: [AppScreen] = [.toneGallery]
+    @StateObject private var appState = AppState()
+    @StateObject private var toastManager = ToastManager()
 
     var body: some View {
         NavigationStack(path: $path) {
@@ -10,15 +12,26 @@ struct RootView: View {
                     screenView(for: screen)
                 }
         }
+        .environmentObject(appState)
+        .environmentObject(toastManager)
+        .toast($toastManager.currentToast)
+        .fullScreenError($appState.currentError) {
+            // Retry action based on current state
+            appState.retryLastAction()
+        }
+        .onChange(of: toastManager.currentToast) { _, newValue in
+            if newValue == nil {
+                toastManager.processQueue()
+            }
+        }
     }
 
     @ViewBuilder
     func screenView(for screen: AppScreen) -> some View {
         switch screen {
-        case .toneGallery:
-            ToneCollectionView(
-                onAddTone: { path.append(.uploadPreference) },
-                onSelectTone: { tone in path.append(.uploadPhoto(toneStyle: tone)) }
+case .toneGallery:
+            BrandingSplashView(
+                onGetStarted: { path.append(.uploadPreference) }
             )
             .navigationBarBackButtonHidden(true)
         case .uploadPreference:
@@ -53,7 +66,7 @@ struct RootView: View {
                 onDone: { path = [.toneGallery] },
                 onBack: { path.removeLast() }
             )
-        case .crop(let image):
+        case .crop(_):
             Text("Crop Screen")
         }
     }

@@ -1,0 +1,302 @@
+{
+	"info": {
+		"_postman_id": "246ce040-3346-4244-aea5-091afe29df6d",
+		"name": "Tona Image API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "6283575"
+	},
+	"item": [
+		{
+			"name": "Upload First Group",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "files[]",
+							"value": "",
+							"type": "file"
+						}
+					]
+				},
+				"url": "{{base_url}}/upload-first-group"
+			},
+			"response": [
+				{
+					"name": "Example Response",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "files[]",
+									"value": "",
+									"type": "file"
+								}
+							]
+						},
+						"url": "{{base_url}}/upload-first-group"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "Text",
+					"header": [],
+					"cookie": [],
+					"body": "{\n  \"message\": \"First group uploaded successfully.\",\n  \"groupId\": \"group_ref_abc\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Upload Second Group",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "files[]",
+							"value": "",
+							"type": "file"
+						}
+					]
+				},
+				"url": "{{base_url}}/upload-second-group"
+			},
+			"response": [
+				{
+					"name": "Example Response",
+					"originalRequest": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "files[]",
+									"value": "",
+									"type": "file"
+								}
+							]
+						},
+						"url": "{{base_url}}/upload-second-group"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "Text",
+					"header": [],
+					"cookie": [],
+					"body": "{\n  \"message\": \"Second group uploaded successfully.\",\n  \"groupId\": \"group_edit_def\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Start Processing",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"userId\": \"user_123456\",\n  \"jobName\": \"AI Wrapping Job\",\n  \"firstGroupId\": \"group_ref_abc\",\n  \"secondGroupId\": \"group_edit_def\",\n  \"notifyUrl\": \"https://yourapp.com/hooks/job-status\",\n  \"options\": {\n    \"style\": \"realistic\",\n    \"faceEnhancement\": true,\n    \"targetResolution\": \"1024x1024\"\n  }\n}"
+				},
+				"url": "{{base_url}}/start-processing"
+			},
+			"response": [
+				{
+					"name": "Example Response",
+					"originalRequest": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"userId\": \"user_123456\",\n  \"jobName\": \"AI Wrapping Job\",\n  \"firstGroupId\": \"group_ref_abc\",\n  \"secondGroupId\": \"group_edit_def\",\n  \"notifyUrl\": \"https://yourapp.com/hooks/job-status\",\n  \"options\": {\n    \"style\": \"realistic\",\n    \"faceEnhancement\": true,\n    \"targetResolution\": \"1024x1024\"\n  }\n}"
+						},
+						"url": "{{base_url}}/start-processing"
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "Text",
+					"header": [],
+					"cookie": [],
+					"body": "{\n  \"jobId\": \"job_abc123456\",\n  \"message\": \"Processing started.\"\n}"
+				}
+			]
+		},
+		{
+			"name": "Check Status",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/status/:jobId",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"status",
+						":jobId"
+					],
+					"variable": [
+						{
+							"key": "jobId"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Example Response",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/status/:jobId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"status",
+								":jobId"
+							],
+							"variable": [
+								{
+									"key": "jobId"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "Text",
+					"header": [],
+					"cookie": [],
+					"body": "{\n  \"jobId\": \"job_abc123456\",\n  \"status\": \"editing\",\n  \"progress\": 75,\n  \"currentStep\": \"Editing image 6 of 8\",\n  \"finished\": false,\n  \"errors\": []\n}"
+				}
+			]
+		},
+		{
+			"name": "Get Result",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/result/:jobId",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"result",
+						":jobId"
+					],
+					"variable": [
+						{
+							"key": "jobId"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Example Response",
+					"originalRequest": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/result/:jobId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"result",
+								":jobId"
+							],
+							"variable": [
+								{
+									"key": "jobId"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "Text",
+					"header": [],
+					"cookie": [],
+					"body": "{\n  \"jobId\": \"job_abc123456\",\n  \"finished\": true,\n  \"resultUrls\": [\n    \"https://yourdomain.com/results/job_abc123456/image1.png\",\n    \"https://yourdomain.com/results/job_abc123456/image2.png\"\n  ]\n}"
+				}
+			]
+		},
+		{
+			"name": "Cancel Job",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{base_url}}/cancel/:jobId",
+					"host": [
+						"{{base_url}}"
+					],
+					"path": [
+						"cancel",
+						":jobId"
+					],
+					"variable": [
+						{
+							"key": "jobId"
+						}
+					]
+				}
+			},
+			"response": [
+				{
+					"name": "Example Response",
+					"originalRequest": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/cancel/:jobId",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cancel",
+								":jobId"
+							],
+							"variable": [
+								{
+									"key": "jobId"
+								}
+							]
+						}
+					},
+					"status": "OK",
+					"code": 200,
+					"_postman_previewlanguage": "Text",
+					"header": [],
+					"cookie": [],
+					"body": "{\n  \"message\": \"Job cancelled successfully.\",\n  \"jobId\": \"job_abc123456\"\n}"
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "https://yourdomain.com/api"
+		}
+	]
+}
