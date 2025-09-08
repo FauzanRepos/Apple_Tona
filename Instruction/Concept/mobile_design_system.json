@@ -1,0 +1,290 @@
+{
+  "designSystem": {
+    "name": "Mobile Photo Processing App Design System",
+    "version": "1.0",
+    "platform": "iOS",
+    "designLanguage": "Modern iOS Human Interface Guidelines",
+    
+    "colorPalette": {
+      "primary": {
+        "blue": "#007AFF",
+        "darkBlue": "#1E3A5F",
+        "description": "Primary CTA buttons and active states"
+      },
+      "neutral": {
+        "lightGray": "#F5F5F5",
+        "mediumGray": "#D1D1D6",
+        "darkGray": "#8E8E93",
+        "white": "#FFFFFF",
+        "description": "Backgrounds, borders, and secondary text"
+      },
+      "semantic": {
+        "success": "#34C759",
+        "warning": "#FF9500",
+        "error": "#FF3B30"
+      }
+    },
+
+    "typography": {
+      "systemFont": "SF Pro",
+      "hierarchy": {
+        "title1": {
+          "fontSize": "28px",
+          "fontWeight": "bold",
+          "lineHeight": "34px",
+          "usage": "Main screen titles"
+        },
+        "title2": {
+          "fontSize": "22px",
+          "fontWeight": "bold", 
+          "lineHeight": "28px",
+          "usage": "Section headers"
+        },
+        "body": {
+          "fontSize": "17px",
+          "fontWeight": "regular",
+          "lineHeight": "22px",
+          "usage": "Primary body text"
+        },
+        "caption": {
+          "fontSize": "15px",
+          "fontWeight": "regular",
+          "lineHeight": "20px",
+          "usage": "Secondary descriptions"
+        },
+        "buttonText": {
+          "fontSize": "17px",
+          "fontWeight": "semibold",
+          "usage": "Button labels"
+        }
+      }
+    },
+
+    "spacing": {
+      "unit": "8px",
+      "scale": {
+        "xs": "4px",
+        "sm": "8px", 
+        "md": "16px",
+        "lg": "24px",
+        "xl": "32px",
+        "xxl": "48px"
+      },
+      "screenMargins": "20px",
+      "cardPadding": "16px",
+      "buttonPadding": "12px 24px"
+    },
+
+    "borderRadius": {
+      "small": "8px",
+      "medium": "12px",
+      "large": "16px",
+      "circular": "50%",
+      "usage": {
+        "cards": "medium",
+        "buttons": "medium", 
+        "images": "medium",
+        "containers": "large"
+      }
+    },
+
+    "shadows": {
+      "light": {
+        "boxShadow": "0 2px 8px rgba(0, 0, 0, 0.1)",
+        "usage": "Cards, modals"
+      },
+      "medium": {
+        "boxShadow": "0 4px 16px rgba(0, 0, 0, 0.15)",
+        "usage": "Floating elements"
+      }
+    },
+
+    "components": {
+      "buttons": {
+        "primary": {
+          "backgroundColor": "#007AFF",
+          "color": "#FFFFFF",
+          "borderRadius": "12px",
+          "padding": "12px 24px",
+          "fontSize": "17px",
+          "fontWeight": "semibold",
+          "minHeight": "48px",
+          "states": {
+            "disabled": {
+              "backgroundColor": "#D1D1D6",
+              "color": "#8E8E93"
+            }
+          }
+        },
+        "secondary": {
+          "backgroundColor": "transparent",
+          "color": "#007AFF",
+          "border": "1px solid #D1D1D6",
+          "borderRadius": "12px",
+          "padding": "12px 24px"
+        }
+      },
+
+      "cards": {
+        "photoCard": {
+          "backgroundColor": "#FFFFFF",
+          "borderRadius": "16px",
+          "padding": "16px",
+          "shadow": "0 2px 8px rgba(0, 0, 0, 0.1)",
+          "aspectRatio": "1:1",
+          "overflow": "hidden"
+        },
+        "contentCard": {
+          "backgroundColor": "#F5F5F5",
+          "borderRadius": "12px",
+          "padding": "20px",
+          "border": "2px dashed #D1D1D6"
+        }
+      },
+
+      "layout": {
+        "screen": {
+          "backgroundColor": "#F5F5F5",
+          "padding": "20px",
+          "safeArea": true
+        },
+        "grid": {
+          "columns": 2,
+          "gap": "16px",
+          "responsive": true
+        },
+        "stack": {
+          "direction": "vertical",
+          "spacing": "24px",
+          "alignment": "center"
+        }
+      },
+
+      "navigation": {
+        "statusBar": {
+          "style": "dark-content",
+          "backgroundColor": "transparent"
+        },
+        "tabBar": {
+          "backgroundColor": "#FFFFFF",
+          "height": "83px",
+          "shadow": "0 -1px 0 rgba(0, 0, 0, 0.1)"
+        },
+        "backButton": {
+          "icon": "chevron-left",
+          "color": "#007AFF"
+        }
+      },
+
+      "forms": {
+        "uploadArea": {
+          "border": "2px dashed #D1D1D6",
+          "borderRadius": "12px",
+          "backgroundColor": "#F5F5F5",
+          "minHeight": "120px",
+          "centerContent": true,
+          "states": {
+            "dragOver": {
+              "borderColor": "#007AFF",
+              "backgroundColor": "#F0F8FF"
+            }
+          }
+        }
+      }
+    },
+
+    "patterns": {
+      "onboarding": {
+        "structure": "multi-step wizard",
+        "progression": "linear",
+        "elements": [
+          "hero title",
+          "descriptive subtitle", 
+          "visual content area",
+          "primary action button",
+          "step indicator"
+        ]
+      },
+
+      "photoProcessing": {
+        "workflow": [
+          "upload/capture",
+          "processing indicator",
+          "result preview",
+          "edit options",
+          "save/share"
+        ],
+        "feedback": {
+          "loading": "progress indicators",
+          "success": "checkmarks and confirmations",
+          "errors": "inline error messages"
+        }
+      },
+
+      "mediaDisplay": {
+        "grid": "2-column responsive grid",
+        "aspectRatio": "square preferred",
+        "lazy loading": true,
+        "placeholder": "skeleton loading states"
+      }
+    },
+
+    "interactions": {
+      "transitions": {
+        "duration": "0.3s",
+        "easing": "ease-out",
+        "pageTransitions": "slide from right"
+      },
+      "gestures": {
+        "tap": "standard button interaction",
+        "longPress": "context menus",
+        "swipe": "navigation between screens",
+        "pinchZoom": "image viewing"
+      },
+      "feedback": {
+        "haptic": "light impact on button press",
+        "visual": "scale animation on touch",
+        "loading": "spinner or progress bar"
+      }
+    },
+
+    "accessibility": {
+      "contrast": "WCAG AA compliant",
+      "focusVisible": "blue outline ring",
+      "semanticLabels": "descriptive aria-labels",
+      "dynamicType": "supports system font scaling",
+      "voiceOver": "full screen reader support"
+    },
+
+    "responsive": {
+      "breakpoints": {
+        "mobile": "320px - 480px",
+        "tablet": "768px - 1024px"
+      },
+      "adaptations": {
+        "tablet": {
+          "grid": "3-4 columns",
+          "sidePadding": "48px",
+          "modalWidth": "560px"
+        }
+      }
+    },
+
+    "iconography": {
+      "style": "SF Symbols",
+      "weight": "regular to semibold",
+      "sizes": {
+        "small": "16px",
+        "medium": "24px", 
+        "large": "32px"
+      },
+      "commonIcons": [
+        "photo.stack",
+        "camera",
+        "square.and.arrow.up",
+        "checkmark.circle",
+        "xmark.circle"
+      ]
+    }
+  }
+}
