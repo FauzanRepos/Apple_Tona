@@ -17,25 +17,27 @@ struct ContentView: View {
     }
     
     var body: some View {
-        Group {
-            switch currentView {
-            case .photoUpload:
-                PhotoUploadView()
-            case .processing:
-                ProcessingView()
-            case .results:
-                ResultsView()
-            }
-        }
-        .onReceive(NotificationCenter.default.publisher(for: .navigateToProcessing)) { _ in
-            currentView = .processing
-        }
-        .onReceive(NotificationCenter.default.publisher(for: .navigateToResults)) { _ in
-            currentView = .results
-        }
-        .onReceive(NotificationCenter.default.publisher(for: .navigateToUpload)) { _ in
-            currentView = .photoUpload
-        }
+        LottieView(name: "Tona_lottie", loopMode: .loop)
+            .frame(width: 320, height: 320)
+//        Group {
+//            switch currentView {
+//            case .photoUpload:
+//                PhotoUploadView()
+//            case .processing:
+//                ProcessingView()
+//            case .results:
+//                ResultsView()
+//            }
+//        }
+//        .onReceive(NotificationCenter.default.publisher(for: .navigateToProcessing)) { _ in
+//            currentView = .processing
+//        }
+//        .onReceive(NotificationCenter.default.publisher(for: .navigateToResults)) { _ in
+//            currentView = .results
+//        }
+//        .onReceive(NotificationCenter.default.publisher(for: .navigateToUpload)) { _ in
+//            currentView = .photoUpload
+//        }
     }
 }
 

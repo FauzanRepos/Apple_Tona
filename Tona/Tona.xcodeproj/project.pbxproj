@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		5116B2BF2E7026450085A796 /* Lottie in Frameworks */ = {isa = PBXBuildFile; productRef = 5116B2BE2E7026450085A796 /* Lottie */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		D7058A142E6C154C0034D386 /* Tona.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tona.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5116B2BF2E7026450085A796 /* Lottie in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +83,7 @@
 			);
 			name = Tona;
 			packageProductDependencies = (
+				5116B2BE2E7026450085A796 /* Lottie */,
 			);
 			productName = Tona;
 			productReference = D7058A142E6C154C0034D386 /* Tona.app */;
@@ -107,6 +113,9 @@
 			);
 			mainGroup = D7058A0B2E6C154C0034D386;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				5116B2BD2E7026450085A796 /* XCRemoteSwiftPackageReference "lottie-ios" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D7058A152E6C154C0034D386 /* Products */;
 			projectDirPath = "";
@@ -339,6 +348,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		5116B2BD2E7026450085A796 /* XCRemoteSwiftPackageReference "lottie-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/airbnb/lottie-ios.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 4.5.2;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		5116B2BE2E7026450085A796 /* Lottie */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 5116B2BD2E7026450085A796 /* XCRemoteSwiftPackageReference "lottie-ios" */;
+			productName = Lottie;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D7058A0C2E6C154C0034D386 /* Project object */;
 }
